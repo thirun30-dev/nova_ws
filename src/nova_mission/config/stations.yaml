@@ -1,0 +1,12 @@
+# Named stations in the map frame (metres, radians).
+# These match the Gazebo warehouse (tools/gen_warehouse.py). For the real robot,
+# drive NOVA to each spot, read the pose (ros2 run tf2_ros tf2_echo map base_footprint)
+# and write it here — or keep a second file and pass stations_file:=...
+stations:
+  home:   {x: -5.0, y:  0.0, yaw: 0.0}
+  pick_a: {x: -2.0, y:  0.6, yaw: 0.0}
+  pick_b: {x: -2.0, y: -0.6, yaw: 0.0}
+  pick_c: {x:  2.5, y:  2.6, yaw: 0.0}
+  pick_d: {x:  2.5, y: -2.6, yaw: 0.0}
+  drop_1: {x:  5.0, y:  2.0, yaw: 0.0}
+  drop_2: {x:  5.0, y: -2.0, yaw: 0.0}

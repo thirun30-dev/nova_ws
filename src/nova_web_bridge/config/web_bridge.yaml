@@ -1,0 +1,10 @@
+nova_web_bridge:
+  ros__parameters:
+    manage_navigation: false        # true on the robot: the dashboard's mode selector starts/stops Nav2/SLAM
+    startup_mode: IDLE              # IDLE | MAPPING | NAVIGATION (only with manage_navigation)
+    maps_dir: "~/nova_maps"         # maps saved from the dashboard land here
+    locations_file: "~/.ros/nova_locations.json"
+    default_map: ""                 # empty = nova_navigation/maps/warehouse.yaml
+    global_frame: map
+    odom_frame: odom
+    robot_frame: base_footprint

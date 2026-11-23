@@ -1,0 +1,10 @@
+# Map management (handled by nova_web_bridge). Long operations report on /nova/operation_result.
+string OP_SAVE_MAP=save_map
+string OP_SERIALIZE_POSE_GRAPH=serialize_pose_graph
+string OP_DELETE_MAP=delete_map
+
+string operation
+string map_name
+---
+bool success
+string message

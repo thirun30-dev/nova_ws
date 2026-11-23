@@ -1,0 +1,23 @@
+nova_base_driver:
+  ros__parameters:
+    # Nano runs hiro_base1.ino (ROSArduinoBridge protocol). No IMU, no battery sensing.
+    port: /dev/nova_llc          # udev symlink (scripts/99-nova.rules) -> ttyUSB1 (FTDI)
+    baud: 57600                  # BAUDRATE in hiro_base1.ino
+
+    # --- geometry: keep in sync with nova_description/urdf/properties.xacro ---
+    wheel_radius: 0.0325         # MEASURE
+    wheel_separation: 0.152      # effective, lidar-measured 2026-11-23 (encoder 365.1° vs scan-matched 359.0° at 0.149).
+                                 # Tape said 0.200 - re-measure tyre centre to centre. Can be changed live:
+                                 # ros2 param set /nova_base_driver wheel_separation <m>
+    ticks_per_rev: 610.0         # calibrated 2026-11-23: 1 m floor drive (odom 1.017 m vs tape 1.00 m at 600)
+    max_motor_rpm: 550.0         # N25 6V 550RPM no-load
+
+    pid_rate: 30.0               # PID_RATE in hiro_base1.ino ('m' targets are ticks per PID frame)
+    poll_rate: 30.0              # Hz: one 'm' + one 'e' per cycle
+    cmd_timeout: 0.5             # s without cmd_vel -> send 'm 0 0'
+
+    publish_tf: false            # false when robot_localization EKF owns odom->base_footprint
+    odom_frame: odom
+    base_frame: base_footprint
+    left_wheel_joint: left_wheel_joint
+    right_wheel_joint: right_wheel_joint

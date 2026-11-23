@@ -1,0 +1,9 @@
+rplidar_node:
+  ros__parameters:
+    channel_type: serial
+    serial_port: /dev/nova_lidar     # udev symlink -> ttyUSB0 (CP2102)
+    serial_baudrate: 115200          # A1M8
+    frame_id: laser_frame
+    inverted: false
+    angle_compensate: true
+    scan_mode: Standard

@@ -1,0 +1,25 @@
+# systemd unit: start NOVA at boot. Installed by setup_pi.sh, which fills in @USER@ and @WS@.
+#   sudo systemctl status nova        # is it running?
+#   journalctl -u nova -f             # live log
+#   sudo systemctl restart nova       # after changing code/config
+#   sudo systemctl stop nova          # before running launches by hand
+[Unit]
+Description=NOVA AMR (robot bringup + web dashboard)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=@USER@
+SupplementaryGroups=dialout
+WorkingDirectory=@WS@
+ExecStart=@WS@/scripts/nova_start.sh
+Restart=on-failure
+RestartSec=5
+# Ctrl+C-style stop so the base driver brakes the motors; systemd then cleans up
+# everything in the unit, including the SLAM/Nav2 stack the dashboard started.
+KillSignal=SIGINT
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

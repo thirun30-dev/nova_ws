@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+  NOVA differential-drive AMR
+  xacro nova.urdf.xacro sim:=true   -> adds Gazebo (Harmonic) sensors + diff-drive plugin
+-->
+<robot name="nova" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="sim" default="false"/>
+
+  <xacro:include filename="$(find nova_description)/urdf/properties.xacro"/>
+  <xacro:include filename="$(find nova_description)/urdf/inertial_macros.xacro"/>
+  <xacro:include filename="$(find nova_description)/urdf/nova_core.xacro"/>
+
+  <xacro:if value="$(arg sim)">
+    <xacro:include filename="$(find nova_description)/urdf/nova.gazebo.xacro"/>
+  </xacro:if>
+
+</robot>

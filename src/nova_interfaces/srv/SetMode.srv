@@ -1,0 +1,10 @@
+# Switch the navigation stack mode (handled by nova_web_bridge)
+string MODE_IDLE=IDLE
+string MODE_MAPPING=MAPPING
+string MODE_NAVIGATION=NAVIGATION
+
+string mode
+string map_name        # NAVIGATION only: map name from /nova/maps (empty = default warehouse map)
+---
+bool success
+string message

@@ -1,0 +1,7 @@
+string pickup
+string dropoff
+uint8 priority
+---
+bool accepted
+string mission_id
+string message

@@ -1,0 +1,22 @@
+mission_manager:
+  ros__parameters:
+    stations_file: ""            # empty = <share>/nova_mission/config/stations.yaml
+    policy: priority             # fifo | priority | nearest
+    load_time: 3.0               # s dwell at pickup
+    unload_time: 3.0             # s dwell at dropoff
+    max_retries: 1               # extra Nav2 attempts per leg before the mission fails
+    return_home: true            # go to home_station when the queue is empty
+    home_station: home
+    global_frame: map
+    robot_frame: base_footprint
+    nav_action: navigate_to_pose
+    log_dir: "~/.ros/nova_missions"   # one CSV per run for throughput / scheduling analysis
+
+mission_generator:
+  ros__parameters:
+    rate_per_min: 2.0            # Poisson arrival rate
+    max_missions: 20             # 0 = unlimited
+    high_priority_prob: 0.2
+    seed: 42
+    pickups: [pick_a, pick_b, pick_c, pick_d]
+    dropoffs: [drop_1, drop_2]
