@@ -15,7 +15,7 @@
   <exec_depend>robot_localization</exec_depend>
   <exec_depend>nova_web_bridge</exec_depend>
   <exec_depend>teleop_twist_keyboard</exec_depend>
-  <!-- used by sim_all.launch.py (laptop); the Pi build skips nova_gazebo (see scripts/setup_pi.sh) -->
+  <!-- used by sim_all.launch.py (laptop); nova_gazebo only installs files, so the Pi builds it too -->
   <exec_depend>nova_gazebo</exec_depend>
   <exec_depend>nova_navigation</exec_depend>
   <exec_depend>nova_mission</exec_depend>

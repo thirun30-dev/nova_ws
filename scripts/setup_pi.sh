@@ -16,10 +16,10 @@ sudo usermod -aG dialout "$USER"
 sudo cp "$WS/scripts/99-nova.rules" /etc/udev/rules.d/
 sudo udevadm control --reload-rules && sudo udevadm trigger
 
-source /opt/ros/jazzy/setup.bash
+set +u; source /opt/ros/jazzy/setup.bash; set -u   # ROS setup files use unset variables
 cd "$WS"
-# Gazebo is not needed on the robot
-colcon build --symlink-install --packages-skip nova_gazebo
+# nova_gazebo only installs files (no Gazebo needed) and nova_bringup depends on it, so build everything
+colcon build --symlink-install
 
 grep -q "nova_ws/install/setup.bash" ~/.bashrc || cat >> ~/.bashrc <<'EOF'
 source /opt/ros/jazzy/setup.bash
@@ -43,6 +43,11 @@ sed -e "s|@USER@|$USER|g" -e "s|@WS@|$WS|g" "$WS/scripts/nova.service" \
   | sudo tee /etc/systemd/system/nova.service >/dev/null
 sudo systemctl daemon-reload
 sudo systemctl enable nova.service
+
+# Allow restarting just the nova service without a password (remote updates)
+sed -e "s|@USER@|$USER|g" "$WS/scripts/nova-sudoers" > /tmp/nova-sudoers
+sudo visudo -cf /tmp/nova-sudoers && sudo install -m 0440 -o root -g root /tmp/nova-sudoers /etc/sudoers.d/nova-service
+rm -f /tmp/nova-sudoers
 
 echo "Done. Plug in the Nano + lidar and reboot:  sudo reboot"
 echo "After boot, open  http://$(hostname).local:8080  (or http://<pi-ip>:8080) on a phone/laptop on the same Wi-Fi."

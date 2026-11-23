@@ -153,7 +153,7 @@ class WebBridge(Node):
         self.publish_maps()
         self.estop_pub.publish(Bool(data=False))
 
-        self.create_timer(0.05, self.publish_pose)
+        self.create_timer(0.1, self.publish_pose)     # 10 Hz (was 20): Pi CPU
         self.create_timer(0.1, self.estop_hold)
         self.create_timer(0.5, self.publish_state)
         self.create_timer(0.5, self.publish_nav)
@@ -283,6 +283,13 @@ class WebBridge(Node):
             res.success = False
             res.message = ('navigation stack is launched externally '
                            '(start the bridge with manage_navigation:=true to switch modes)')
+            return res
+        # SLAM / AMCL started without scans never recover (Nav2 bringup aborts), so refuse up front
+        if mode != 'IDLE' and self.rates.get('scan', 0.0) < 1.0:
+            res.success = False
+            res.message = (f'lidar is not scanning (/scan {self.rates.get("scan", 0.0):.1f} Hz) - '
+                           f'wait until Health shows /scan, then switch to {mode} again')
+            self.result('set_mode', False, res.message)     # shown by the dashboard
             return res
         map_path = ''
         if mode == 'NAVIGATION':

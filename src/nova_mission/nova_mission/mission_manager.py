@@ -70,6 +70,7 @@ class MissionManager(Node):
         self.max_retries = int(p('max_retries', 1).value)
         self.return_home = bool(p('return_home', True).value)
         self.home = p('home_station', 'home').value
+        self.worked = False          # return home only after mission work, not after manual goals
         self.global_frame = p('global_frame', 'map').value
         self.robot_frame = p('robot_frame', 'base_footprint').value
         nav_action = p('nav_action', 'navigate_to_pose').value
@@ -298,7 +299,20 @@ class MissionManager(Node):
                 return min(queued, key=lambda j: (d(j), j.seq))
         return min(queued, key=lambda j: (-j.priority, j.seq))   # 'priority' (default)
 
+    def home_key(self):
+        """Station to return to: exact name, then case-insensitive name, then any type 'home'."""
+        if self.home in self.stations:
+            return self.home
+        for name in self.stations:
+            if name.lower() == self.home.lower():
+                return name
+        for name, st in self.stations.items():
+            if st.get('type') == 'home':
+                return name
+        return None
+
     def start(self, job: Job):
+        self.worked = True
         if self.phase == 'HOMING':
             self.cancel_nav()
         self.active = job
@@ -346,16 +360,21 @@ class MissionManager(Node):
             nxt = self.select_next()
             if nxt is not None:
                 self.start(nxt)
-            elif (self.return_home and self.phase is None and self.home in self.stations
-                  and now >= self.home_retry_after):
+            elif (self.return_home and self.worked and self.phase is None
+                  and self.home_key() is not None and now >= self.home_retry_after):
+                home = self.home_key()
                 xy = self.robot_xy()
-                h = self.stations[self.home]
+                h = self.stations[home]
                 if xy is not None and math.hypot(xy[0] - h['x'], xy[1] - h['y']) > 0.3:
                     self.phase = 'HOMING'
-                    self.send_nav(self.home)
+                    self.send_nav(home)
+                elif xy is not None:
+                    self.worked = False      # already home
             elif self.phase == 'HOMING' and self.nav_state in ('succeeded', 'failed'):
                 if self.nav_state == 'failed':
                     self.home_retry_after = now + 10.0
+                else:
+                    self.worked = False      # home again: wait for the next mission
                 self.phase = None
                 self.nav_state = None
             return
@@ -452,7 +471,7 @@ class MissionManager(Node):
         arr.markers.append(clear)
         for i, (name, s) in enumerate(sorted(self.stations.items())):
             t = s.get('type', '')
-            if name == self.home or t == 'home':
+            if name == self.home_key() or t == 'home':
                 kind = 'home'
             elif t == 'dropoff' or name.startswith('drop'):
                 kind = 'drop'

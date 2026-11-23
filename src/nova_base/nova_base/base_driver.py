@@ -261,6 +261,9 @@ class BaseDriver(Node):
             tf.transform.rotation.w = qw
             self.tf_bc.sendTransform(tf)
 
+        self.js_count = getattr(self, 'js_count', 0) + 1
+        if self.js_count % 3:                  # wheel joint states at 10 Hz: they only animate
+            return                             # the wheels, and every update costs /tf traffic
         js = JointState()
         js.header.stamp = stamp
         js.name = [self.left_joint, self.right_joint]

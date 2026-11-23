@@ -23,6 +23,9 @@ setup(
     entry_points={
         'console_scripts': [
             'base_driver = nova_base.base_driver:main',
+            'scan_watchdog = nova_base.scan_watchdog:main',
+            'lidar_reset = nova_base.lidar_reset:main',
+            'a1_lidar = nova_base.a1_lidar:main',
         ],
     },
 )

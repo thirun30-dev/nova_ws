@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { LuMapPinned, LuPlus, LuNavigation, LuSquare } from 'react-icons/lu';
+import React, { useEffect, useState } from 'react';
+import { LuMapPinned, LuPlus, LuNavigation, LuSquare, LuTrash2 } from 'react-icons/lu';
 import { LocIcon, locType } from './ui.jsx';
 import { fmt } from '../lib/geom.js';
 
@@ -7,6 +7,17 @@ export default function WaypointBar({ nova }) {
   const { locations, api, connected, state, nav } = nova;
   const blocked = !connected || state?.estop;
   const [naming, setNaming] = useState(null); // null | string
+  const [confirmDel, setConfirmDel] = useState(null); // name awaiting a second tap
+  useEffect(() => {
+    if (!confirmDel) return undefined;
+    const t = setTimeout(() => setConfirmDel(null), 3000);
+    return () => clearTimeout(t);
+  }, [confirmDel]);
+  const remove = (name) => {
+    if (confirmDel !== name) { setConfirmDel(name); return; }
+    api.locationCommand({ action: 'delete_location', name });
+    setConfirmDel(null);
+  };
   const save = (e) => {
     e.preventDefault();
     if (naming?.trim()) api.locationCommand({ action: 'save_location', name: naming.trim(), type: 'waypoint', use_current_pose: true });
@@ -49,6 +60,14 @@ export default function WaypointBar({ nova }) {
               title={`Navigate to ${l.name}`}
             >
               <LuNavigation size={12} /> Go
+            </button>
+            <button
+              className={`btn ${confirmDel === l.name ? 'danger' : 'ghost'} xs`}
+              disabled={!connected}
+              onClick={() => remove(l.name)}
+              title={confirmDel === l.name ? `Tap again to delete ${l.name}` : `Remove ${l.name}`}
+            >
+              <LuTrash2 size={12} />{confirmDel === l.name && ' Delete?'}
             </button>
           </div>
         ))}
