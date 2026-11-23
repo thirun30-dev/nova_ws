@@ -139,10 +139,8 @@ See `web/nova_dashboard/README.md` for the full ROS interface. `?demo=1` runs it
 - [x] Forward = positive ticks on both wheels
 - [x] `wheel_separation` — rotate 360° in place, compare `/odom` yaw with the scan (0.152 effective)
 - [x] `wheel_radius` measured (83 mm tyre → 0.0415 m)
-- [ ] Re-measure tyre centre-to-centre spacing and sync `wheel_separation` in `properties.xacro` (still 0.200)
 - [x] Lidar orientation checked — full 360° scan lines up with the robot, `lidar_yaw: 0`
 - [x] Nav2 footprint in `nav2_params.yaml` matches the hex chassis (+1 cm margin)
-- [ ] Record real station poses for `stations.yaml`; set AMCL initial pose for the lab map
 
 ### Nav2 notes (Pi 5)
 `nav2_params.yaml` is tuned for the Pi and a small room: controller at 10 Hz, `PoseProgressChecker`
