@@ -5,11 +5,12 @@ nova_base_driver:
     baud: 57600                  # BAUDRATE in hiro_base1.ino
 
     # --- geometry: keep in sync with nova_description/urdf/properties.xacro ---
-    wheel_radius: 0.0325         # MEASURE
+    wheel_radius: 0.0415         # measured 2026-11-24: 83 mm tyre diameter
     wheel_separation: 0.152      # effective, lidar-measured 2026-11-23 (encoder 365.1° vs scan-matched 359.0° at 0.149).
                                  # Tape said 0.200 - re-measure tyre centre to centre. Can be changed live:
                                  # ros2 param set /nova_base_driver wheel_separation <m>
-    ticks_per_rev: 610.0         # calibrated 2026-11-23: 1 m floor drive (odom 1.017 m vs tape 1.00 m at 600)
+    ticks_per_rev: 779.0         # 1 m floor drive 2026-11-23 gave 610 at r=0.0325 (odom 1.017 m vs tape 1.00 m at 600);
+                                 # rescaled to the measured radius: 610 * 0.0415/0.0325 = 779 (same distance per tick)
     max_motor_rpm: 550.0         # N25 6V 550RPM no-load
 
     pid_rate: 30.0               # PID_RATE in hiro_base1.ino ('m' targets are ticks per PID frame)

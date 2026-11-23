@@ -42,7 +42,7 @@ class BaseDriver(Node):
         p = self.declare_parameter
         self.port = p('port', '/dev/nova_llc').value
         self.baud = int(p('baud', 57600).value)
-        self.r = float(p('wheel_radius', 0.0325).value)
+        self.r = float(p('wheel_radius', 0.0415).value)
         self.sep = float(p('wheel_separation', 0.200).value)
         self.tpr = float(p('ticks_per_rev', 610.0).value)
         self.max_rpm = float(p('max_motor_rpm', 550.0).value)

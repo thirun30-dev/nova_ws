@@ -76,8 +76,10 @@ run the generator with the same `seed` under `fifo`, `priority` and `nearest` to
 ## 4. Real robot (Pi 5)
 1. **Firmware** — the Nano runs `hiro_base1.ino` (see the firmware note above); flash it with the Arduino IDE.
 2. **Calibrate** → `nova_base/config/base.yaml` (and keep `nova_description/urdf/properties.xacro` in sync).
-   Current values: `ticks_per_rev: 610` (1 m tape drive), `wheel_separation: 0.152` (effective, from a
-   lidar scan-matched 360° turn — the tape-measured 0.20 m gives wrong yaw), `wheel_radius: 0.0325`.
+   Current values: `wheel_radius: 0.0415` (83 mm tyre), `ticks_per_rev: 779` (1 m tape drive, rescaled to the
+   measured radius), `wheel_separation: 0.152` (effective, from a lidar scan-matched 360° turn — the
+   tape-measured 0.20 m gives wrong yaw). If you change `wheel_radius`, scale `ticks_per_rev` by the same
+   factor, or odometry distance changes.
    `wheel_separation` can be changed live: `ros2 param set /nova_base_driver wheel_separation <m>`.
 3. **Bring up** — `./scripts/setup_pi.sh` installs the `nova` systemd service, so after a reboot the Pi starts
    everything by itself (base, lidar, EKF, rosbridge :9090, web bridge, missions, website :8080).
@@ -133,11 +135,12 @@ See `web/nova_dashboard/README.md` for the full ROS interface. `?demo=1` runs it
 | `/missions/queue`, `/missions/metrics`, `/missions/stations` | nova_interfaces / MarkerArray | mission_manager |
 
 ## Tuning checklist
-- [x] `ticks_per_rev` calibrated (610, 1 m tape drive)
+- [x] `ticks_per_rev` calibrated (779 at r = 41.5 mm, 1 m tape drive)
 - [x] Forward = positive ticks on both wheels
 - [x] `wheel_separation` — rotate 360° in place, compare `/odom` yaw with the scan (0.152 effective)
-- [ ] `wheel_radius` measured; re-measure tyre centre-to-centre spacing and sync `properties.xacro`
-- [ ] Lidar orientation — if the scan is rotated 180° in RViz, set `lidar_yaw` to `${pi}` in properties.xacro
+- [x] `wheel_radius` measured (83 mm tyre → 0.0415 m)
+- [ ] Re-measure tyre centre-to-centre spacing and sync `wheel_separation` in `properties.xacro` (still 0.200)
+- [x] Lidar orientation checked — full 360° scan lines up with the robot, `lidar_yaw: 0`
 - [x] Nav2 footprint in `nav2_params.yaml` matches the hex chassis (+1 cm margin)
 - [ ] Record real station poses for `stations.yaml`; set AMCL initial pose for the lab map
 

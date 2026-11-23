@@ -8,7 +8,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- ===== Drive ===== -->
-  <xacro:property name="wheel_radius"     value="0.0325"/> <!-- MEASURE: tyre diameter / 2 -->
+  <xacro:property name="wheel_radius"     value="0.0415"/> <!-- measured 2026-11-24: 83 mm tyre diameter / 2 -->
   <xacro:property name="wheel_width"      value="0.026"/>  <!-- MEASURE -->
   <xacro:property name="wheel_separation" value="0.200"/>  <!-- measured 2026-11-23: tyre centre to tyre centre -->
   <xacro:property name="wheel_x"          value="0.0"/>    <!-- axle position along chassis (x forward) -->
@@ -28,7 +28,7 @@
 
   <!-- ===== Sensors ===== -->
   <xacro:property name="lidar_x"           value="0.0"/>
-  <xacro:property name="lidar_yaw"         value="0.0"/>   <!-- set to ${pi} if the scan in RViz is rotated 180 deg -->
+  <xacro:property name="lidar_yaw"         value="0.0"/>   <!-- checked 2026-11-24: scan matches the robot, no rotation needed -->
   <xacro:property name="lidar_scan_height" value="0.030"/> <!-- A1M8 base to scan plane -->
   <xacro:property name="imu_x"   value="0.0"/>             <!-- MPU9250 on NOVA-LLC board, bottom enclosure -->
   <xacro:property name="imu_y"   value="0.0"/>
