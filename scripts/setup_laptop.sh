@@ -14,7 +14,7 @@ sudo apt install -y \
   ros-jazzy-robot-localization ros-jazzy-rplidar-ros \
   ros-jazzy-rosbridge-suite ros-jazzy-teleop-twist-keyboard
 
-source /opt/ros/jazzy/setup.bash
+set +u; source /opt/ros/jazzy/setup.bash; set -u   # ROS setup files use unset variables
 cd "$WS"
 colcon build --symlink-install
 
